@@ -40,7 +40,9 @@ def setup_logging() -> logging.Logger:
     if not logger.handlers:
         # 스크립트 파일이 있는 디렉토리에 로그 파일 생성
         script_dir = Path(__file__).parent.absolute()
-        log_file = script_dir / 'scraper.log'
+        log_dir = script_dir / 'data'
+        log_dir.mkdir(exist_ok=True)
+        log_file = log_dir / 'scraper.log'
         # 파일 핸들러
         file_handler = logging.FileHandler(log_file, encoding='utf-8')
         file_handler.setLevel(logging.INFO)
@@ -91,8 +93,10 @@ class NaverCoinScraper:
         self.work_dir = Path(__file__).parent.absolute()
         os.chdir(self.work_dir)
         # 파일 경로
-        self.visited_urls_file = self.work_dir / 'visited_urls.txt'
-        self.break_point_file = self.work_dir / 'break-point.html'
+        self.data_dir = self.work_dir / 'data'
+        self.data_dir.mkdir(exist_ok=True) # 폴더가 없으면 생성
+        self.visited_urls_file = self.data_dir / 'visited_urls.txt'
+        self.break_point_file = self.data_dir / 'break-point.html'
         # 설정값 (config.py에서 이미 환경변수 처리됨)
         self.gecko_path = config.GECKODRIVER_PATH
         self.delay_hours = config.DELAY_HOURS
